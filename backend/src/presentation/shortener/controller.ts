@@ -32,7 +32,7 @@ export class ShortenerController {
         };
 
         this.shortenerService.registerUrl( registerUrlDto! )
-            // .then( keys => response.status( 200 ).json({ ...keys }))
+            .then( data => response.status( 200 ).json({ ...data }))
             .catch( ( error ) => this.handleError( error, response ) );
     };
 };

@@ -1,10 +1,11 @@
-import { CustomError, RegisterUrlDto } from "../../domain";
+import { CustomError, RegisterUrlDto, RegisterUrlUseCase } from "../../domain";
 
 export class ShortenerService {
 
     constructor() {};
 
-    public async registerUrl( dto: RegisterUrlDto ){
-        throw CustomError.internalServer("Not implemented");
+    public async registerUrl( dto: RegisterUrlDto ) {
+        
+        return new RegisterUrlUseCase().execute( dto );
     };
 };
