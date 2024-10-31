@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import { ShortenerRoutes } from './shortener/routes';
 
 export class AppRoutes {
 
@@ -7,7 +8,7 @@ export class AppRoutes {
         const router = Router();
         
         // Definir las rutas
-        // router.use('/api/todos', /*TodoRoutes.routes */ );
+        router.use('/api/shortener', ShortenerRoutes.routes );
 
         return router;
     };

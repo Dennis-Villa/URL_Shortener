@@ -1,5 +1,5 @@
-import { Response } from "express";
-import { CustomError } from "../../domain";
+import { Request, Response } from "express";
+import { CustomError, RegisterUrlDto } from "../../domain";
 import { ShortenerService } from "../services/shortener.service";
 
 export class ShortenerController {
@@ -12,24 +12,26 @@ export class ShortenerController {
 
         if ( error instanceof CustomError ) {
         
-            return response.status( error.statusCode ).json({ error: error.message });
+            response.status( error.statusCode ).json({ error: error.message });
+            return;
         };
 
-        return response.status( 500 ).json({ 
+        response.status( 500 ).json({ 
             error: `Internal server error: ${error.message}`,
         });
+        return;
     };
 
     public registerUrl = async( request: Request, response: Response ) => {
 
-        // const [ error, generateKeyPairsDto ] = GenerateKeyPairsDto.create( request.body );
-        // if ( !!error ){ 
+        const [ error, registerUrlDto ] = RegisterUrlDto.create( request.body );
+        if ( !!error ){ 
 
-        //     response.status(400).json({ error });
-        //     return;
-        // };
+            response.status(400).json({ error });
+            return;
+        };
 
-        this.shortenerService.registerUrl(  )
+        this.shortenerService.registerUrl( registerUrlDto! )
             // .then( keys => response.status( 200 ).json({ ...keys }))
             .catch( ( error ) => this.handleError( error, response ) );
     };
