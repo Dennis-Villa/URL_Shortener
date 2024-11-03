@@ -1,18 +1,17 @@
 import { Router } from 'express';
-import { ShortenerService } from '../services/shortener.service';
 import { ShortenerController } from './controller';
 
 export class ShortenerRoutes {
 
-    static get routes(): Router {
+    constructor(
+        private readonly shortenerController: ShortenerController,
+    ) {}
+
+    public get routes(): Router {
 
         const router = Router();
-        const shortenerService = new ShortenerService();
-        const shortenerController = new ShortenerController(
-            shortenerService
-        );
         
-        router.post('/', shortenerController.registerUrl );
+        router.post('/', this.shortenerController.registerUrl );
 
         return router;
     };

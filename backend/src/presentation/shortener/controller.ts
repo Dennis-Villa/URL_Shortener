@@ -35,4 +35,14 @@ export class ShortenerController {
             .then( data => response.status( 200 ).json({ ...data }))
             .catch( ( error ) => this.handleError( error, response ) );
     };
+
+    public redirectToUrl = async( request: Request, response: Response ) => {
+
+        const { urlId } = request.params;
+        const urlIdNumber = parseInt( urlId );
+
+        this.shortenerService.redirectToUrl( urlIdNumber )
+            .then( url => response.redirect( url ) )
+            .catch( ( error ) => this.handleError( error, response ) );
+    };
 };
