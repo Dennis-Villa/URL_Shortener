@@ -27,8 +27,6 @@ export class RegisterUserUseCase {
                 }
             });
 
-            // await this.sendEmailValidationLink( user.email );
-
             const token = await JwtAdapter.generateToken({ 
                 id: user.id, 
                 email: user.email, 
