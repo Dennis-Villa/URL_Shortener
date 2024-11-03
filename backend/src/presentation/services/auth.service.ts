@@ -1,7 +1,4 @@
-import { UserModel } from '../../data';
-import { CustomError, RegisterUserDto, RegisterUserUseCase } from '../../domain';
-import { UserEntity } from '../../domain';
-import { cryptAdapter, JwtAdapter } from '../../config';
+import { CustomError, LoginUserDto, LoginUserUseCase, RegisterUserDto, RegisterUserUseCase, ValidateEmailUseCase } from '../../domain';
 // import { EmailService } from './email.service';
 
 export class AuthService {
@@ -41,61 +38,13 @@ export class AuthService {
         return RegisterUserUseCase.execute( dto );
     };
 
-    public async loginUser( loginUserDto: LoginUserDto ) {
+    public async loginUser( dto: LoginUserDto ) {
 
-        try {
-
-            const user = await UserModel.findOne({
-                email: loginUserDto.email,
-            });
-            if( !user ) throw CustomError.badRequest( 'Incorrect Email or Password' );
-
-            const isMatching = cryptAdapter.compare(
-                loginUserDto.password,
-                user.password,
-            );
-            if( !isMatching ) throw CustomError.badRequest( 'Incorrect Email or Password' );
-
-            const token = await JwtAdapter.generateToken({ 
-                    id: user.id, 
-                    email: user.email, 
-                });
-            if( !token ) throw CustomError.internalServer( 'Error while creating JWT' );
-
-            const { password, ...userEntity } = UserEntity.fromObject( user );
-            return {
-                user: userEntity,
-                token,
-            };
-        }
-        catch( error ){
-
-            throw CustomError.internalServer(`${ error }`);
-        };
+        return LoginUserUseCase.execute( dto );
     };
 
     public async validateEmail( token: string ) {
 
-        try {
-
-            const payload = await JwtAdapter.validateToken( token );
-            if( !payload ) throw CustomError.unauthorized( 'Invalid token' );
-
-            const { email } = payload as { email: string };
-            if( !email ) throw CustomError.internalServer( 'Email not in token' );
-
-            const user = await UserModel.findOne({ email });
-            if( !user ) throw CustomError.internalServer( 'Email not exists' );
-
-            user.emailValidated = true;
-
-            await user.save();
-
-            return true;
-        }
-        catch( error ){
-
-            throw CustomError.internalServer(`${ error }`);
-        };
+        return ValidateEmailUseCase.execute( token );
     };
 };
