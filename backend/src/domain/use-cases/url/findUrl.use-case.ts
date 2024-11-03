@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import { CustomError } from "../errors/custom.error";
+import { CustomError } from "../../errors/custom.error";
 
 const prisma = new PrismaClient();
 

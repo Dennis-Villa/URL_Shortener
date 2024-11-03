@@ -1,8 +1,8 @@
 import { PrismaClient, Url_Type } from "@prisma/client";
 import dns from 'dns';
-import { RegisterUrlDto } from "../dtos/register-url.dto";
-import { envs } from "../../config";
-import { CustomError } from "../errors/custom.error";
+import { RegisterUrlDto } from "../../dtos/url/register-url.dto";
+import { envs } from "../../../config";
+import { CustomError } from "../../errors/custom.error";
 
 const prisma = new PrismaClient();
 
@@ -71,7 +71,7 @@ export class RegisterUrlUseCase {
                 }
             });
     
-            const shortUrl = `${envs.URL}${newUrl.id}`;
+            const shortUrl = `${envs.WEB_SERVICE_URL}${newUrl.id}`;
     
             return await prisma.urlModel.update({
                 data: {
