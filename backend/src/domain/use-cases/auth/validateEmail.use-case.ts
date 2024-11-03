@@ -1,7 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import { CustomError } from "../../errors/custom.error";
-import { cryptAdapter, JwtAdapter } from "../../../config";
-import { LoginUserDto } from "../../dtos/auth/loginUser.dto";
+import { JwtAdapter } from "../../../config";
 
 const prisma = new PrismaClient();
 

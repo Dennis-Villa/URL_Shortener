@@ -10,3 +10,4 @@ export * from './use-cases/url/findUrl.use-case';
 export * from './use-cases/auth/registerUser.use-case';
 export * from './use-cases/auth/loginUser.use-case';
 export * from './use-cases/auth/validateEmail.use-case';
+export * from './use-cases/email/sendValidationEmail.use-case';

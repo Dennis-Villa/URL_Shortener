@@ -1,17 +1,31 @@
 import { Router } from 'express';
-import { ShortenerController } from './controller';
+import { AuthController } from './controller';
+import { EmailService } from '../services/email.service';
+import { AuthService } from '../services/auth.service';
+import { envs } from '../../config';
 
-export class ShortenerRoutes {
+export class AuthRoutes {
 
-    constructor(
-        private readonly shortenerController: ShortenerController,
-    ) {}
-
-    public get routes(): Router {
+    static get routes(): Router {
 
         const router = Router();
         
-        router.post('/', this.shortenerController.registerUrl );
+        const emailService = new EmailService(
+            envs.MAILER_EMAIL,
+            envs.MAILER_SERVICE,
+            envs.MAILER_SECRET_KEY,
+        );
+        const authService = new AuthService(
+            emailService,
+        );
+        const controller = new AuthController(
+            authService,
+        );
+        
+        router.post('/login', controller.loginUser );
+        router.post('/register', controller.registerUser );
+
+        router.get('/validate-email/:token', controller.validateEmail );
 
         return router;
     };

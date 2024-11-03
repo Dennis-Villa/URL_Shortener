@@ -5,9 +5,19 @@ import { cryptAdapter, JwtAdapter } from "../../../config";
 
 const prisma = new PrismaClient();
 
+interface RegisteredUser {
+    user: {
+        id: number;
+        email: string;
+        name: string;
+        validated: boolean;
+    };
+    token: string;
+};
+
 export class RegisterUserUseCase {
 
-    static async execute( dto: RegisterUserDto ): Promise<{ [ key: string ]: any }> {
+    static async execute( dto: RegisterUserDto ): Promise<RegisteredUser> {
 
         const { email, password } = dto;
 

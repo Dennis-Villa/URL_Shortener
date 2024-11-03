@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { ShortenerRoutes } from './shortener/routes';
 import { ShortenerController } from './shortener/controller';
 import { ShortenerService } from './services/shortener.service';
+import { AuthRoutes } from './auth/routes';
 
 export class AppRoutes {
 
@@ -16,6 +17,7 @@ export class AppRoutes {
         const shortenerRoutes = new ShortenerRoutes(shortenerController);
         
         // Definir las rutas
+        router.use('/auth', AuthRoutes.routes );
         router.use('/api/shortener', shortenerRoutes.routes );
         router.get('/:urlId', shortenerController.redirectToUrl );
 

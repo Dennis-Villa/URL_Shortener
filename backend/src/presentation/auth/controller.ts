@@ -1,11 +1,11 @@
 import { Request, Response } from "express";
-import { CustomError, RegisterUrlDto } from "../../domain";
-import { ShortenerService } from "../services/shortener.service";
+import { CustomError, LoginUserDto, RegisterUserDto } from "../../domain";
+import { AuthService } from "../services/auth.service";
 
-export class ShortenerController {
+export class AuthController {
 
     constructor(
-        private readonly shortenerService: ShortenerService,
+        private readonly authService: AuthService,
     ) {};
 
     private handleError = ( error: Error | CustomError, response: Response ) => {
@@ -22,27 +22,39 @@ export class ShortenerController {
         return;
     };
 
-    public registerUrl = async( request: Request, response: Response ) => {
+    public registerUser = async( request: Request, response: Response ) => {
 
-        const [ error, registerUrlDto ] = RegisterUrlDto.create( request.body );
+        const [ error, registerUserDto ] = RegisterUserDto.create( request.body );
         if ( !!error ){ 
 
             response.status(400).json({ error });
             return;
         };
 
-        this.shortenerService.registerUrl( registerUrlDto! )
+        this.authService.registerUser( registerUserDto! )
             .then( data => response.status( 200 ).json({ ...data }))
             .catch( ( error ) => this.handleError( error, response ) );
     };
 
-    public redirectToUrl = async( request: Request, response: Response ) => {
+    public loginUser = async( request: Request, response: Response ) => {
 
-        const { urlId } = request.params;
-        const urlIdNumber = parseInt( urlId );
+        const [ error, loginUserDto ] = LoginUserDto.create( request.body );
+        if ( !!error ){ 
 
-        this.shortenerService.redirectToUrl( urlIdNumber )
-            .then( url => response.redirect( url ) )
+            response.status(400).json({ error });
+            return;
+        };
+
+        this.authService.loginUser( loginUserDto! )
+            .then( data => response.status( 200 ).json({ ...data }))
             .catch( ( error ) => this.handleError( error, response ) );
+    };
+
+    public validateEmail = async( request: Request, response: Response ) => {
+
+        const { token } = request.params;
+        this.authService.validateEmail( token )
+            .then( () => response.json( 'Email validated' ))
+            .catch( ( error ) => this.handleError( error, response ));
     };
 };
