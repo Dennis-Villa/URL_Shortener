@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "UrlModel" ADD COLUMN     "visits" INTEGER NOT NULL DEFAULT 0;

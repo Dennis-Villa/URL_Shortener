@@ -13,11 +13,24 @@ export class FindUrlUseCase {
             const newUrl = await prisma.urlModel.findUnique({
                 select: {
                     original_url: true,
+                    visits: true,
                 },
                 where: {
                     id: urlId,
                 }
             });
+
+            if( newUrl ) {
+
+                await prisma.urlModel.update({
+                    data: {
+                        visits: newUrl.visits + 1,
+                    },
+                    where: {
+                        id: urlId,
+                    }
+                });
+            }
     
             return newUrl?.original_url || null;
         }

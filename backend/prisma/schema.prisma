@@ -21,6 +21,7 @@ enum Url_Type {
 model UrlModel {
   id            Int         @id @default(autoincrement())
   createdAt     DateTime    @default(now())
+  visits        Int         @default(0)
   original_url  String      @db.VarChar
   short_url     String      @db.VarChar @unique
   type          Url_Type    @default(PUBLIC)
