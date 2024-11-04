@@ -9,14 +9,15 @@ export class AuthService {
 
     public async registerUser( dto: RegisterUserDto ) {
 
-        const { user } = await RegisterUserUseCase.execute( dto );
+        const registerInfo = await RegisterUserUseCase.execute( dto );
+        const { user } = registerInfo;
 
         const emailOptions = await SendValidationEmailUseCase.execute( user.email );
 
         const isSet = await this.emailService.sendEmail( emailOptions );
         if( !isSet ) throw CustomError.internalServer( 'Error sending email' );
 
-        return user;
+        return registerInfo;
     };
 
     public async loginUser( dto: LoginUserDto ) {

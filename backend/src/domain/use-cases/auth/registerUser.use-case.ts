@@ -51,6 +51,8 @@ export class RegisterUserUseCase {
         }
         catch( error ){
 
+            if( error instanceof CustomError ) throw error;
+
             throw CustomError.internalServer(`${ error }`);
         };
     };

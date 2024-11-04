@@ -49,16 +49,22 @@ export class RegisterUrlUseCase {
 
     async execute( dto: RegisterUrlDto ): Promise<{ [ key: string ]: any }> {
 
-        const { url, type, protocol, userId } = dto;
-
-        if( type === 'private' && userId === undefined ){ 
+        const { url, type, protocol, user } = dto;
+        if( type === 'private' && user === undefined ){ 
             throw CustomError.badRequest(`Only logged users can create a private short url.`);
         }
+
+        let { id, validated } = user || {};
+        if( type === 'private' && validated === false ){ 
+            throw CustomError.badRequest(`Only validated users can create a private short url.`);
+        }
+        if( type === 'public' ) id = undefined;
+
         const correctedType = type === "public" ? 'PUBLIC' : 'PRIVATE';
         
         const correctedUrl = await this.correctUrl( url, protocol );
 
-        const existingUrl = await this.urlExists( correctedUrl, correctedType, userId );
+        const existingUrl = await this.urlExists( correctedUrl, correctedType, id );
         if( existingUrl !== null ) return existingUrl;
 
         try{
@@ -67,7 +73,7 @@ export class RegisterUrlUseCase {
                     type: correctedType,
                     original_url: correctedUrl,
                     short_url: 'temp',
-                    userId: userId,
+                    userId: type === 'private' ? id : undefined,
                 }
             });
     
