@@ -12,6 +12,9 @@ export class ShortenerRoutes {
 
         const router = Router();
         
+        router.get('/', this.shortenerController.getPublicUrls );
+        router.get('/my-urls', AuthMiddleware.validateJWT, this.shortenerController.getPrivateUrls );
+
         router.post('/', AuthMiddleware.registerUrlJWT, this.shortenerController.registerUrl );
 
         return router;

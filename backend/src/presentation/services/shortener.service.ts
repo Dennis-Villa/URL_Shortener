@@ -1,4 +1,8 @@
-import { CustomError, RegisterUrlDto, RegisterUrlUseCase, FindUrlUseCase } from "../../domain";
+import { 
+    CustomError, RegisterUrlDto, RegisterUrlUseCase, FindUrlUseCase, 
+    PaginationDto, UrlsPagination, getPublicUrlsUseCase, GetPrivateUrlsDto, 
+    getPrivateUrlsUseCase
+} from "../../domain";
 
 export class ShortenerService {
 
@@ -15,5 +19,15 @@ export class ShortenerService {
         if( originalUrl === null ) throw CustomError.notFound( "The URL don't exist in our database." );
 
         return originalUrl || '/';
+    };
+
+    public async getPublicUrls( dto: PaginationDto ): Promise<UrlsPagination> {
+        
+        return getPublicUrlsUseCase.execute( dto );
+    };
+
+    public async getPrivateUrls( dto: GetPrivateUrlsDto ): Promise<UrlsPagination> {
+        
+        return getPrivateUrlsUseCase.execute( dto );
     };
 };

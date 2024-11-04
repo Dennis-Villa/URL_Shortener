@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { CustomError, RegisterUrlDto } from "../../domain";
+import { CustomError, GetPrivateUrlsDto, PaginationDto, RegisterUrlDto } from "../../domain";
 import { ShortenerService } from "../services/shortener.service";
 
 export class ShortenerController {
@@ -43,6 +43,43 @@ export class ShortenerController {
 
         this.shortenerService.redirectToUrl( urlIdNumber )
             .then( url => response.redirect( url ) )
+            .catch( ( error ) => this.handleError( error, response ) );
+    };
+
+    public getPublicUrls = async( request: Request, response: Response ) => {
+
+        const { page = 1, limit = 10 } = request.query;
+
+        const [ error, paginationDto ] = PaginationDto.create( Number( page ), Number( limit ) );
+        if( error ) { 
+
+            response.status(400).json({ error });
+            return;
+        };
+
+        this.shortenerService.getPublicUrls( paginationDto! )
+            .then( ( urls ) => response.status( 201 ).json( urls ) )
+            .catch( ( error ) => this.handleError( error, response ) );
+    };
+
+    public getPrivateUrls = async( request: Request, response: Response ) => {
+
+        const { page = 1, limit = 10 } = request.query;
+        const { user } = request.body;
+
+        const [ error, getPrivateUrlsDto ] = GetPrivateUrlsDto.create({
+            user,
+            page,
+            limit,
+        });
+        if( error ) { 
+
+            response.status(400).json({ error });
+            return;
+        };
+
+        this.shortenerService.getPrivateUrls( getPrivateUrlsDto! )
+            .then( ( urls ) => response.status( 201 ).json( urls ) )
             .catch( ( error ) => this.handleError( error, response ) );
     };
 };

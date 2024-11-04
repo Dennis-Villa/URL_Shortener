@@ -18,7 +18,7 @@ export class AppRoutes {
         
         // Definir las rutas
         router.use('/auth', AuthRoutes.routes );
-        router.use('/api/shortener', shortenerRoutes.routes );
+        router.use('/api/urls', shortenerRoutes.routes );
         router.get('/:urlId', shortenerController.redirectToUrl );
 
         return router;
