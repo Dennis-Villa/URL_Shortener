@@ -3,7 +3,8 @@ export default function HomeScreen() {
 
     return (
         <>
-            <h1>Home Screen</h1>
+            <h1>Url Shortener</h1>
+
         </>
     );
 };
