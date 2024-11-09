@@ -1,5 +1,8 @@
+import { useState } from "react";
 
 export default function HomeScreen() {
+
+    const [url, setUrl] = useState("");
 
     return (
         <>
